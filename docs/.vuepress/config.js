@@ -2,10 +2,11 @@
  * @Author: 徐蔚铭
  * @Date: 2021-12-22 20:28:03
  * @LastEditors: 徐蔚铭
- * @LastEditTime: 2021-12-22 20:31:04
+ * @LastEditTime: 2021-12-23 23:52:05
  * @Description: file content
  */
 module.exports = {
+  base: '/blog/', // 比如你的仓库是test
   title: '网站标题',
   description: '网站描述',
   // 注入到当前页面的 HTML <head> 中的标签
