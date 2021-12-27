@@ -25,3 +25,26 @@ FROM
   ) t
 ORDER BY
   t.begin_time
+
+
+  select
+  SUM(
+    case
+      when t.TASK_NAME
+      when '生成个人账户基本信息文件并上传' then t.COST
+      else 0
+    ) as '生成个人账户基本信息文件并上传',
+    SUM(
+      case
+        when t.TASK_NAME
+        when '生成个人基本信息文件并上传' then t.COST
+        else 0
+      ) as '生成个人基本信息文件并上传',
+      SUM(
+        case
+          when t.TASK_NAME
+          when '生成个人账户月度表现文件并上传' then t.COST
+          else 0
+        ) as '生成个人账户月度表现文件并上传',
+        from
+          t  group by t.BEGIN_DATE

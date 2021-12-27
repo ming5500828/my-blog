@@ -1,41 +1,52 @@
-select
-  *
+SELECT
+  begin_date,
+  task_name,
+  cost
 from
   (
     select
       *
     from
       (
-        SELECT
-          app,
-          task_name,
-          TASK_ID,
-          BEGIN_TIME,
-          begin_date,
-          ROW_NUMBER() OVER(
-            PARTITION BY TASK_ID,
-            begin_date
-            ORDER BY
-              BEGIN_TIME desc
-          ) AS RN
-        FROM
+        select
+          *
+        from
           (
             SELECT
               app,
+              cost,
               task_name,
               TASK_ID,
               BEGIN_TIME,
-              TO_CHAR(BEGIN_TIME, 'YYYYMMDD') AS BEGIN_DATE
+              begin_date,
+              ROW_NUMBER() OVER(
+                PARTITION BY TASK_ID,
+                begin_date
+                ORDER BY
+                  BEGIN_TIME desc
+              ) AS RN
             FROM
-              SSM_TASK_MONITOR_INFO
-            where
-              BEGIN_TIME IS not NULL
-          ) T
+              (
+                SELECT
+                  app,
+                  cost,
+                  task_name,
+                  TASK_ID,
+                  BEGIN_TIME,
+                  TO_CHAR(BEGIN_TIME, 'YYYYMMDD') AS BEGIN_DATE
+                FROM
+                  SSM_TASK_MONITOR_INFO
+                where
+                  BEGIN_TIME IS not NULL
+              ) T
+          )
+        where
+          rn = 1
+        order by
+          begin_date
       )
-    where
-      rn = 1
-    order by
-      task_id
-  )
-WHERE
-  app = 'PDC'
+    WHERE
+      app = 'PDC'
+  ) t1
+group by
+  t.BEGIN_DATE
